@@ -7,7 +7,7 @@ export function setupForm() {
   const closeSuccess = document.getElementById('close-success');
   
   // Initialize EmailJS
-  emailjs.init("YOUR_PUBLIC_KEY"); // Reemplaza con tu Public Key de EmailJS
+  emailjs.init("YQVUd0vIqQZqQxeFx9"); // Reemplaza con tu Public Key de EmailJS
   
   if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
@@ -51,8 +51,8 @@ export function setupForm() {
         
         // Send email using EmailJS
         const response = await emailjs.send(
-          'YOUR_SERVICE_ID',    // Reemplaza con tu Service ID
-          'YOUR_TEMPLATE_ID',   // Reemplaza con tu Template ID
+          'service_ixh3pbf',    // Reemplaza con tu Service ID
+          'template_9xg3lee',   // Reemplaza con tu Template ID
           templateParams
         );
         
