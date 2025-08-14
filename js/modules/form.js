@@ -7,7 +7,7 @@ export function setupForm() {
   const closeSuccess = document.getElementById('close-success');
   
   // Initialize EmailJS
-  emailjs.init("YQVUd0vIqQZqQxeFx9"); // Reemplaza con tu Public Key de EmailJS
+  emailjs.init("QVUd0vIqQZqQxeFx9"); // Reemplaza con tu Public Key de EmailJS
   
   if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
