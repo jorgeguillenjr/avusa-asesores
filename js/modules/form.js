@@ -1,10 +1,13 @@
 /**
- * Setup contact form functionality with email sending
+ * Setup contact form functionality with EmailJS
  */
 export function setupForm() {
   const contactForm = document.getElementById('contact-form');
   const successMessage = document.getElementById('success-message');
   const closeSuccess = document.getElementById('close-success');
+  
+  // Initialize EmailJS
+  emailjs.init("YOUR_PUBLIC_KEY"); // Reemplaza con tu Public Key de EmailJS
   
   if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
@@ -36,27 +39,31 @@ export function setupForm() {
       submitButton.disabled = true;
       
       try {
-        // Send email using Formspree (primary method)
-        const formData = new FormData(contactForm);
+        // Prepare template parameters
+        const templateParams = {
+          from_name: name,
+          from_email: email,
+          phone: phone,
+          visa_type: getVisaTypeText(visaType),
+          message: message || 'Sin mensaje adicional',
+          to_email: 'info@avusa-asesores.com'
+        };
         
-        const response = await fetch('https://formspree.io/f/mldnrvlo', {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
+        // Send email using EmailJS
+        const response = await emailjs.send(
+          'YOUR_SERVICE_ID',    // Reemplaza con tu Service ID
+          'YOUR_TEMPLATE_ID',   // Reemplaza con tu Template ID
+          templateParams
+        );
         
-        if (response.ok) {
+        if (response.status === 200) {
           // Success - reset form and show success message
           contactForm.reset();
           successMessage.classList.add('visible');
           
-          // Send confirmation email to client (optional)
-          await sendConfirmationEmail(name, email, visaType);
-          
+          console.log('Email sent successfully:', response);
         } else {
-          throw new Error('Error en el envío del formulario');
+          throw new Error('Error en el envío del correo');
         }
         
       } catch (error) {
@@ -85,6 +92,21 @@ export function setupForm() {
       }
     });
   }
+}
+
+/**
+ * Convert visa type value to readable text
+ */
+function getVisaTypeText(value) {
+  const visaTypes = {
+    'tourist': 'Visa de Turista (B-1/B-2)',
+    'student': 'Visa de Estudiante (F-1/M-1)',
+    'work': 'Visa de Trabajo (H-1B, L-1, etc.)',
+    'family': 'Visa Familiar',
+    'other': 'Otro/No estoy seguro'
+  };
+  
+  return visaTypes[value] || value;
 }
 
 /**
@@ -141,18 +163,4 @@ function showErrorMessage(message) {
       }
     }, 300);
   }, 5000);
-}
-
-/**
- * Send confirmation email to client (optional feature)
- */
-async function sendConfirmationEmail(name, email, visaType) {
-  try {
-    // This is an optional feature - you can implement this with EmailJS or another service
-    // For now, we'll just log it
-    console.log(`Confirmation email would be sent to ${email} for ${name} regarding ${visaType} visa`);
-  } catch (error) {
-    console.error('Error sending confirmation email:', error);
-    // Don't throw error here as the main form submission was successful
-  }
 }
