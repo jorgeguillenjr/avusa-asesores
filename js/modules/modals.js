@@ -201,6 +201,96 @@ export function setupServiceModal() {
 }
 
 /**
+ * Setup discount policy modal functionality
+ */
+export function setupDiscountPolicyModal() {
+  const discountPolicyLink = document.getElementById('discount-policy-link');
+  const discountPolicyModal = document.getElementById('discountPolicyModal');
+  const closeDiscountPolicyModal = document.getElementById('closeDiscountPolicyModal');
+  const acceptDiscountPolicy = document.getElementById('acceptDiscountPolicy');
+
+  if (discountPolicyLink) {
+    discountPolicyLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showDiscountPolicyModal();
+    });
+  }
+
+  if (closeDiscountPolicyModal) {
+    closeDiscountPolicyModal.addEventListener('click', () => {
+      hideDiscountPolicyModal();
+    });
+  }
+
+  if (acceptDiscountPolicy) {
+    acceptDiscountPolicy.addEventListener('click', () => {
+      hideDiscountPolicyModal();
+    });
+  }
+
+  if (discountPolicyModal) {
+    discountPolicyModal.addEventListener('click', (e) => {
+      if (e.target === discountPolicyModal) {
+        hideDiscountPolicyModal();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && discountPolicyModal && discountPolicyModal.style.display === 'flex') {
+      hideDiscountPolicyModal();
+    }
+  });
+
+  function showDiscountPolicyModal() {
+    if (discountPolicyModal) {
+      discountPolicyModal.style.display = 'flex';
+      discountPolicyModal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+
+      const firstFocusableElement = discountPolicyModal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (firstFocusableElement) {
+        firstFocusableElement.focus();
+      }
+    }
+  }
+
+  function hideDiscountPolicyModal() {
+    if (discountPolicyModal) {
+      discountPolicyModal.classList.remove('show');
+      setTimeout(() => {
+        discountPolicyModal.style.display = 'none';
+        document.body.style.overflow = '';
+      }, 300);
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (discountPolicyModal && discountPolicyModal.style.display === 'flex') {
+      const focusableElements = discountPolicyModal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            lastElement.focus();
+            e.preventDefault();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            firstElement.focus();
+            e.preventDefault();
+          }
+        }
+      }
+    }
+  });
+}
+
+/**
  * Setup legal notice modal functionality
  */
 export function setupLegalNoticeModal() {
